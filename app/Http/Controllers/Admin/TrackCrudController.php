@@ -1,0 +1,184 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Requests\TrackRequest;
+use App\Models\Track;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+
+/**
+ * Class TrackCrudController
+ * @package App\Http\Controllers\Admin
+ * @property-read CrudPanel $crud
+ */
+class TrackCrudController extends CrudController
+{
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
+
+    /**
+     * Configure the CrudPanel object. Apply settings to all operations.
+     *
+     * @return void
+     */
+    public function setup()
+    {
+        CRUD::setModel(Track::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/track');
+        CRUD::setEntityNameStrings('track', 'tracks');
+    }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupListOperation()
+    {
+//        CRUD::column('id');
+        CRUD::column('title');
+//        CRUD::column('lyrics');
+//        CRUD::column('file')
+//            ->type('upload')
+//            ->prefix('/public/');
+        CRUD::column('publish');
+        CRUD::column('approve')
+            ->label(__('Approve'))
+            ->type('boolean')
+            ->options([
+                0 => ' ', 1 => ' '
+            ])
+            ->wrapper([
+                'element' => 'i', // the element will default to "a" so you can skip it here
+                'class' => function ($crud, $column, $entry, $related_key) {
+                    if ($entry->approve == 1)
+                        return 'las la-check-circle font-weight-bolder lead';
+                    elseif ($entry->approve == 0)
+                        return 'las la-times-circle font-weight-bolder lead';
+                },
+                // 'target' => '_blank',
+            ]);
+
+        CRUD::column('album_id');
+        CRUD::column('category_id');
+        CRUD::column('artist_id');
+
+        CRUD::column('image')
+            ->type('image')
+            ->prefix('/storage/');
+//        CRUD::column('created_at');
+//        CRUD::column('updated_at');
+
+        /**
+         * Columns can be defined using the fluent syntax or array syntax:
+         * - CRUD::column('price')->type('number');
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
+         */
+    }
+
+    protected function setupShowOperation()
+    {
+//        CRUD::column('id');
+        CRUD::column('title');
+        CRUD::column('lyrics');
+        CRUD::column('file');
+        CRUD::column('publish');
+        CRUD::column('album_id');
+        CRUD::column('category_id');
+        CRUD::column('artist_id');
+        CRUD::column('image')
+            ->type('image')
+            ->prefix('/storage/');
+        CRUD::column('approve')
+            ->label(__('Approve'))
+            ->type('boolean')
+            ->options([
+                0 => ' ', 1 => ' '
+            ])
+            ->wrapper([
+                'element' => 'i', // the element will default to "a" so you can skip it here
+                'class' => function ($crud, $column, $entry, $related_key) {
+                    if ($entry->approve == 1)
+                        return 'las la-check-circle font-weight-bolder lead';
+                    elseif ($entry->approve == 0)
+                        return 'las la-times-circle font-weight-bolder lead';
+                },
+                // 'target' => '_blank',
+            ]);
+
+        CRUD::column('created_at');
+        CRUD::column('updated_at');
+
+        /**
+         * Columns can be defined using the fluent syntax or array syntax:
+         * - CRUD::column('price')->type('number');
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
+         */
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+
+    protected function setupUpdateOperation()
+    {
+        $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Create operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-create
+     * @return void
+     */
+    protected function setupCreateOperation()
+    {
+        CRUD::setValidation(TrackRequest::class);
+
+//        CRUD::field('id');
+        CRUD::field('title');
+        CRUD::field('lyrics');
+
+        CRUD::field('file')
+            ->type('upload')
+            ->upload(true);
+
+        CRUD::field('publish')
+            ->type('date');
+
+        CRUD::field('category_id');
+        CRUD::field('album_id');
+        CRUD::field('artist_id');
+
+        CRUD::field('image')
+            ->type('image')
+            ->crop(true)
+            ->aspect_ratio(1)
+            ->disk('public')
+            ->prefix('/storage/');
+
+        CRUD::field('approve');
+//        CRUD::field('created_at');
+//        CRUD::field('updated_at');
+
+        /**
+         * Fields can be defined using the fluent syntax or array syntax:
+         * - CRUD::field('price')->type('number');
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
+         */
+    }
+}
