@@ -2444,6 +2444,10 @@ input:checked + .toggle-bg {
   --tw-text-opacity: 1;
   color: rgb(145 150 142 / var(--tw-text-opacity));
 }
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgb(5 122 85 / var(--tw-text-opacity));
+}
 .text-gray-900 {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
@@ -2451,10 +2455,6 @@ input:checked + .toggle-bg {
 .text-\[\#989898\] {
   --tw-text-opacity: 1;
   color: rgb(152 152 152 / var(--tw-text-opacity));
-}
-.text-green-600 {
-  --tw-text-opacity: 1;
-  color: rgb(5 122 85 / var(--tw-text-opacity));
 }
 .text-\[\#6E6E6C\] {
   --tw-text-opacity: 1;
